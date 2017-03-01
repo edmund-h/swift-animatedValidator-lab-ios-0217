@@ -42,17 +42,17 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
         guard let textToValidate = sender.text else { return }
         switch sender.tag {//TODO: test animations!
         case 0:
-            if !validateEmail(textToValidate) { print ("fail") }
+            if !validateEmail(textToValidate) { animateFail(sender) }
         case 1:
             guard let enteredEmail = emailTextField.text else {return}
-            if !confirmText(textToValidate, enteredEmail) {print ("fail") }
+            if !confirmText(textToValidate, enteredEmail) {animateFail(sender) }
         case 2:
-            if !confirmNumber(textToValidate) { print ("fail") }
+            if !confirmNumber(textToValidate) { animateFail(sender) }
         case 3:
-            if !confirmLength(textToValidate, 6) { print ("fail") }
+            if !confirmLength(textToValidate, 6) { animateFail(sender) }
         case 4:
             guard let enteredPass = passwordTextField.text else {return}
-            if !confirmText(textToValidate, enteredPass){ print ("fail")}
+            if !confirmText(textToValidate, enteredPass){ animateFail(sender) }
         default:
             print ("something went very wrong")
         }
@@ -86,37 +86,36 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
     func animateFail (_ obj: UIView){
         let totalDuration = 1.6
         let numberOfFrames = 4.0
+        let toAddX = obj.frame.height * 0.05
+        let toAddY = obj.frame.width * 0.025
         let relativeDuration = totalDuration / numberOfFrames
-        
-        UIView.animateKeyframes(withDuration: totalDuration, delay: 0, options: .calculationModeLinear, animations: {
+        UIView.animateKeyframes(withDuration: totalDuration, delay: 0, options: [.calculationModeLinear, .allowUserInteraction] , animations: {
             UIView.addKeyframe(withRelativeStartTime: 0,
                                relativeDuration: relativeDuration,
                                animations: {
                                 obj.backgroundColor = UIColor.red
-                                obj.frame.size.height.multiply(by: 1.2)
+                                obj.frame.size.height.add(toAddY)
             })
             UIView.addKeyframe(withRelativeStartTime: relativeDuration,
                                relativeDuration: relativeDuration,
                                animations: {
                                 obj.backgroundColor = UIColor.white
-                                obj.frame.size.height.multiply(by: 0.8)
-                                obj.frame.size.width.multiply(by: 1.2)
+                                obj.frame.size.height.add(-1 * toAddY)
             })
             UIView.addKeyframe(withRelativeStartTime: 2 * relativeDuration,
                                relativeDuration: relativeDuration,
                                animations: {
                                 obj.backgroundColor = UIColor.red
-                                obj.frame.size.width.multiply(by: 0.8)
-                                obj.frame.size.height.multiply(by: 1.2)
+                                obj.frame.size.width.add(toAddY)
             })
             UIView.addKeyframe(withRelativeStartTime: 3 * relativeDuration,
                                relativeDuration: relativeDuration, animations: {
                                 obj.backgroundColor = UIColor.white
-                                obj.frame.size.height.multiply(by: 0.8)
+                                obj.frame.size.height.add(-1 * toAddY)
             })
         }, completion: nil)
         
-    }
+    }//this worked but wasn't what I wanted
     
     
 
