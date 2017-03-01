@@ -73,6 +73,9 @@
                                     <constraint firstAttribute="height" constant="30" id="ljd-tH-Sa7"/>
                                 </constraints>
                                 <state key="normal" title="submit"/>
+                                <connections>
+                                    <action selector="hooray:" destination="ecQ-MV-S0N" eventType="touchUpInside" id="SkV-Uv-Jnh"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.51100140810000005" green="0.80293804410000003" blue="0.82755058999999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

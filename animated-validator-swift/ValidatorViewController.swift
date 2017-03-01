@@ -17,7 +17,7 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var passwordConfirmTextField: UITextField!
     
-    var objectz: [UIView] = []
+    var objectz: [UITextField] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,27 +37,42 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
         objectz = [emailTextField, emailConfirmationTextField, phoneTextField, passwordTextField, passwordConfirmTextField]
         objectz.forEach({$0.tag = objectz.index(of: $0)!})//is this OK? i know $0 is in index because it's inside a closure acting on it
     }
-    //i love all this stuff
+    
+    @IBAction func hooray(_ sender: UIButton) {
+        print ("hooray")
+    }
+    
+    
+    //i love all this stuff from here down
     @IBAction func edited(_ sender: UITextField) {
-        guard let textToValidate = sender.text else { return }
-        switch sender.tag {//TODO: test animations!
+        var doneYet = true
+        for object in objectz{
+            guard !validateTextField(object) && doneYet else { continue }
+            doneYet = false
+        }
+        submitButton.isEnabled = doneYet
+    }//this guy is hooked up to all 5 fields switching based on tag.
+    
+    func validateTextField(_ sender: UITextField) -> Bool{
+        guard let textToValidate = sender.text else { return false}
+        switch sender.tag {
         case 0:
-            if !validateEmail(textToValidate) { animateFail(sender) }
+            if !validateEmail(textToValidate) { animateFail(sender); return false}
         case 1:
-            guard let enteredEmail = emailTextField.text else {return}
-            if !confirmText(textToValidate, enteredEmail) {animateFail(sender) }
+            guard let enteredEmail = emailTextField.text else {return false}
+            if !confirmText(textToValidate, enteredEmail) {animateFail(sender);  return false}
         case 2:
-            if !confirmNumber(textToValidate) { animateFail(sender) }
+            if !confirmNumber(textToValidate) { animateFail(sender); return false }
         case 3:
-            if !confirmLength(textToValidate, 6) { animateFail(sender) }
+            if !confirmLength(textToValidate, 6) { animateFail(sender); return false }
         case 4:
-            guard let enteredPass = passwordTextField.text else {return}
-            if !confirmText(textToValidate, enteredPass){ animateFail(sender) }
+            guard let enteredPass = passwordTextField.text else {return false}
+            if !confirmText(textToValidate, enteredPass){ animateFail(sender); return false }
         default:
             print ("something went very wrong")
         }
-    }//this guy is hooked up to all 5 fields switching based on tag.
-    
+        return true
+    }
     func validateEmail(_ text: String)->Bool {
         var charToCheckFor: Character = "@" //first check for @
         for character in text.characters{
@@ -65,8 +80,8 @@ class ValidatorViewController: UIViewController, UITextFieldDelegate {
             if charToCheckFor == "." {return true}  //returns true once both found
             charToCheckFor = "."                    //should occur once @ found
         }
-        return false
-    }
+        return false //fallthrough fail
+    }// i thought this up in 30 seconds and it worked flawlessly first build #yasssss
     
     func confirmNumber (_ input: String) -> Bool{
         let strToInt: Int? = Int(input)
